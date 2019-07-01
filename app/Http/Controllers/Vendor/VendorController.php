@@ -1,10 +1,11 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Vendor;
 
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 
-class VendorVendorController extends Controller
+class VendorController extends Controller
 {
     /**
      * Display a listing of the resource.
