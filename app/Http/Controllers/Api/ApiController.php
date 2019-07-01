@@ -5,8 +5,23 @@ namespace App\Http\Controllers\Api;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
+use App\User;
+
 class ApiController extends Controller
 {
+    public function registration(Request $request)
+    {
+        $user = new User();
+
+        $params = [
+            'addr_city' => $request->addr_city
+        ];
+
+        $result = $user->userRegistration($params);
+
+        return response()->json($result);
+    }
+
     /**
      * Display a listing of the resource.
      *

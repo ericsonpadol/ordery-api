@@ -14,17 +14,18 @@ class SlaveTableHelper extends Model
     public function generateVendorSlaveTable(array $params)
     {
         $sql = 'CREATE TABLE ' . $params['table_name'] . '('
-            . 'id int(10) unsigned NOT NULL AUTO_INCREMENT,'
-            . 'vendor_master_id int(10) NOT NULL UNSIGNED,'
-            . 'name varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,'
-            . 'addr_street text COLLATE utf8mb4_unicode_ci,'
-            . 'addr_brgy text COLLATE utf8mb4_unicode_ci,'
-            . 'addr_city text COLLATE utf8mb4_unicode_ci,'
-            . 'addr_province text COLLATE utf8mb4_unicode_ci,'
-            . 'addr_region text COLLATE utf8mb4_unicode_ci,'
-            . 'addr_zip char(10),'
-            . 'store_name varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,'
-            . 'fb_page text COLLATE utf8mb4_unicode_ci,'
+            . 'id int(10) unsigned NOT NULL AUTO_INCREMENT PRIMARY KEY, '
+            . 'vendor_master_id int(10) NOT NULL, '
+            . 'full_name varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL, '
+            . 'addr_street text COLLATE utf8mb4_unicode_ci, '
+            . 'addr_brgy text COLLATE utf8mb4_unicode_ci, '
+            . 'addr_city text COLLATE utf8mb4_unicode_ci, '
+            . 'addr_province text COLLATE utf8mb4_unicode_ci, '
+            . 'addr_region text COLLATE utf8mb4_unicode_ci, '
+            . 'addr_zip char(10), '
+            . 'store_name varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL, '
+            . 'fb_page text COLLATE utf8mb4_unicode_ci, '
+            . 'created_at TIMESTAMP, '
             . 'website text COLLATE utf8mb4_unicode_ci ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci';
 
         try {

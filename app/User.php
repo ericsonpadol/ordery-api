@@ -10,6 +10,11 @@ use Log;
 use Monolog\Logger;
 use Monolog\Handler\StreamHandler;
 use Session;
+use Illuminate\Support\Facades\Schema;
+
+
+//helpers
+use App\SlaveTableHelper;
 
 class User extends Authenticatable
 {
@@ -113,7 +118,17 @@ class User extends Authenticatable
 
     public function userRegistration(array $params)
     {
+        $slaveTable = new SlaveTableHelper();
+        $slaveTableName = 'fv_' . $params['addr_city'] . '_' . date('Y');
         try {
+            if (isset($params['addr_city']) && !Schema::hasTable($slaveTableName)) {
+                //create slave table
+                $tableParams = array('table_name' => $slaveTableName);
+
+                $result = $slaveTable->generateVendorSlaveTable($tableParams);
+
+                return $result;
+            }
 
         } catch(Exception $e) {
             return [

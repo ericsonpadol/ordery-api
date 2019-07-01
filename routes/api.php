@@ -17,6 +17,10 @@ use Illuminate\Http\Request;
 //     return $request->user();
 // });
 
+//non token based routing
+Route::group(['middlware' => ['api', 'secure.content']], function() {
+    Route::post('/registration',['as' => 'registration', 'uses' => 'Api\ApiController@registration']);
+});
 
 Route::group(['middleware' => ['api', 'secure.content']], function() {
     Route::resource('/users', 'User\UserController', ['except' => ['create', 'edit']]);
