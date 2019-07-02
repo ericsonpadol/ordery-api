@@ -8,6 +8,14 @@ jobs:
     docker:
       # Specify the version you desire here
       - image: circleci/php:7.1-node-browsers
+      - image: circleci/mysql:5.7
+        environment:
+          - DB_CONNECTION=mysql
+          - DB_HOST=166.62.30.116
+          - DB_PORT=3306
+          - DB_DATABASE=orderydb
+          - DB_USERNAME=ordery_user
+          - DB_PASSWORD=Ordery@1234
 
       # Specify service dependencies here if necessary
       # CircleCI maintains a library of pre-built images
@@ -19,6 +27,13 @@ jobs:
       # - image: redis:2.8.19
 
     steps:
+      - run: sudo docker-php-ext-install pdo_mysql
+
+      - run: 'curl -sS https://getcomposer.org/installer | sudo php -- --install-dir=/usr/local/bin --filename=composer'
+
+
+      - run: php -v | composer --version
+
       - checkout
 
       - run: sudo apt update # PHP CircleCI 2.0 Configuration File# PHP CircleCI 2.0 Configuration File sudo apt install zlib1g-dev libsqlite3-dev
@@ -50,8 +65,7 @@ jobs:
 
       # prepare the database
       #- run: touch storage/ordery.sqlite
-      - run: php artisan migrate --database=sqlite --force
-
+      #- run: php artisan migrate --database=mysql --force
       # run tests with phpunit or codecept
       - run: ./vendor/bin/phpunit
       #- run: ./vendor/bin/codecept build
