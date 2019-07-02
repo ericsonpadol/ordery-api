@@ -20,6 +20,7 @@
         "vue": "^2.5.7"
     },
     "dependencies": {
+        "node-libpng": "^0.2.7",
         "pngquant-bin": "^5.0.2"
     }
 }
