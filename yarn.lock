@@ -5636,6 +5636,13 @@ node-gyp@^3.8.0:
     tar "^2.0.0"
     which "1"
 
+node-libpng@^0.2.7:
+  version "0.2.7"
+  resolved "https://registry.yarnpkg.com/node-libpng/-/node-libpng-0.2.7.tgz#f69cf1eb6fb7d8c5005dc12e072b35447a194bff"
+  integrity sha512-A8ct3JfKQUFMI338l6N/58VYCRapM4/HR6tVjXyk/hKATC3Y1kQ9g3k2SxBg7nSJeJRNw+yXnUHwRSQeWbuCjA==
+  dependencies:
+    request "^2.85.0"
+
 node-libs-browser@^2.0.0:
   version "2.2.1"
   resolved "https://registry.yarnpkg.com/node-libs-browser/-/node-libs-browser-2.2.1.tgz#b64f513d18338625f90346d27b0d235e631f6425"
@@ -7112,7 +7119,7 @@ replace-ext@^1.0.0:
   resolved "https://registry.yarnpkg.com/replace-ext/-/replace-ext-1.0.0.tgz#de63128373fcbf7c3ccfa4de5a480c45a67958eb"
   integrity sha1-3mMSg3P8v3w8z6TeWkgMRaZ5WOs=
 
-request@^2.87.0, request@^2.88.0:
+request@^2.85.0, request@^2.87.0, request@^2.88.0:
   version "2.88.0"
   resolved "https://registry.yarnpkg.com/request/-/request-2.88.0.tgz#9c2fca4f7d35b592efe57c7f0a55e81052124fef"
   integrity sha512-NAqBSrijGLZdM0WZNsInLJpkJokL72XYjUpnB0iwsRgxh7dB6COrHnTBNwN0E+lHDAJzu7kLAkDeY08z2/A0hg==
