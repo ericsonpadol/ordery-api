@@ -50,7 +50,7 @@ jobs:
 
       # prepare the database
       #- run: touch storage/ordery.sqlite
-      - run: php artisan migrate --database=mysql --force
+      #- run: php artisan migrate --database=mysql --force
       # run tests with phpunit or codecept
       - run: ./vendor/bin/phpunit
       #- run: ./vendor/bin/codecept build
