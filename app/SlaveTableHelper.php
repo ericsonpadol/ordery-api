@@ -20,7 +20,7 @@ class SlaveTableHelper extends Model
     public static function removeMultiWhitespaceDash($string)
     {
         //remove multiple whitespaces and dashes
-        return preg_replace("/[\s-]+/", "_", $string);
+        return trim(preg_replace("/[\s-]+/", "_", $string));
 
     }
 
@@ -61,6 +61,7 @@ class SlaveTableHelper extends Model
 
             return [
                 'message' => __('messages.error_default'),
+                'table_name' => $sanitizeString,
                 'http_code' => $this->getStatusCode500(),
                 'status' => __('messages.status_error'),
             ];
