@@ -31,14 +31,4 @@ class SlaveTableHelperTest extends TestCase
         $this->assertInstanceOf(SlaveTableHelper::class, $slaveTableHelper);
         $this->assertContains($sanitizeString, $slaveTable);
     }
-
-    /**
-     * @test
-     * test sanitization
-     * @return void
-     */
-    public function it_can_sanitize()
-    {
-
-    }
 }
