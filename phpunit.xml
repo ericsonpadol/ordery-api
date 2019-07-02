@@ -23,7 +23,12 @@
         </whitelist>
     </filter>
     <php>
-        <env name="DB_CONNECTION" value="sqlite"/>
+        <env name="DB_CONNECTION" value="mysql"/>
+        <env name="DB_HOST" value="166.62.30.116"/>
+        <env name="DB_PORT" value="3306"/>
+        <env name="DB_DATABASE" value="orderydb"/>
+        <env name="DB_USERNAME" value="ordery_user"/>
+        <env name="DB_PASSWORD" value="Ordery@1234"/>
         <env name="APP_ENV" value="testing"/>
         <env name="CACHE_DRIVER" value="array"/>
         <env name="SESSION_DRIVER" value="array"/>
