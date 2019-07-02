@@ -27,19 +27,12 @@ jobs:
       # - image: redis:2.8.19
 
     steps:
-      - run:
-          name: Install PHP extensions
-          command: sudo docker-php-ext-install pdo_mysql
+      - run: sudo docker-php-ext-install pdo_mysql
 
-      - run:
-          name: Install Composer
-          command: 'curl -sS https://getcomposer.org/installer | sudo php -- --install-dir=/usr/local/bin --filename=composer'
+      - run: 'curl -sS https://getcomposer.org/installer | sudo php -- --install-dir=/usr/local/bin --filename=composer'
 
-      - run:
-        name: Display versions
-        command: |
-          php -v
-          composer --version
+
+      - run: php -v | composer --version
 
       - checkout
 
