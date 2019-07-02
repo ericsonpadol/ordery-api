@@ -7,18 +7,16 @@ return [
     'status_success' => 'success',
     'header_convo' => 'X-Conversation-ID',
     'convo_id_label' => 'Conversation ID: ',
-    'http_500' => 500,
-    'http_200' => 200,
-    'http_404' => 404,
-    'http_401' => 401,
 
     /**
      * success messages
      */
     'success_slave_table' => 'Slave Table Created',
+    'registration_success' => 'User Registered Successfully.',
 
     /**
      * error messages
      */
     'error_default' => 'Service is Down! Please contact the administrator.',
+    'registration_failure' => 'Sorry! I cannot register this user',
 ];
