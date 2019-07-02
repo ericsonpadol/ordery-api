@@ -116,7 +116,6 @@ class User extends Authenticatable
                 'error_code' => $e->getCode(),
                 'stack_trace' => $e->getTraceAsString(),
                 'line' => $e->getLine(),
-                'http_code' => $this->getStatusCode500()
             ];
         }
     }
