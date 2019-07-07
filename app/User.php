@@ -11,15 +11,17 @@ use Monolog\Logger;
 use Monolog\Handler\StreamHandler;
 use Session;
 use Illuminate\Support\Facades\Schema;
+use Laravel\Passport\HasApiTokens;
 
 
 //helpers
 use App\SlaveTableHelper;
+use App\MasterTableHelper;
 use App\Traits\StatusHttp;
 
 class User extends Authenticatable
 {
-    use Notifiable, SoftDeletes, StatusHttp;
+    use Notifiable, SoftDeletes, StatusHttp, HasApiTokens;
 
     const VERIFIED_USER = 'true';
     const UNVERIFIED_USER = 'false';
@@ -65,6 +67,11 @@ class User extends Authenticatable
         'verification_token',
     ];
 
+    /**
+     * constructor
+     * @param array
+     * @return void
+     */
     public function __construct(array $attributes = [])
     {
         parent::__construct($attributes);
@@ -73,8 +80,10 @@ class User extends Authenticatable
         $this->_logger = new Logger('USER');
         $this->_logger->pushHandler(new StreamHandler('php://stderr', Logger::INFO));
     }
+
     /**
      * return if user is verified
+     * @return string
      */
     public function isVerified()
     {
@@ -116,9 +125,14 @@ class User extends Authenticatable
                 'error_code' => $e->getCode(),
                 'stack_trace' => $e->getTraceAsString(),
                 'line' => $e->getLine(),
-                'http_code' => $this->getStatusCode500()
+                'http_code' => StatusHttp::getStatusCode500()
             ];
         }
+    }
+
+    public function createNewSubscriber($slaveTable, array $params)
+    {
+
     }
 
     public function userRegistration(array $params)
@@ -152,6 +166,7 @@ class User extends Authenticatable
                 'account_type' => $params['account_type'],
                 'verification_token' => User::generateVerificationCode(),
             ];
+
             //create new registered user
             $userAccount = $this->create($paramsUserAccount)->id;
 
@@ -175,7 +190,7 @@ class User extends Authenticatable
                 'tbl_menu' => null,
             ];
 
-            $masterLastInsertedId = DB::table(USER::VENDOR_MASTER_TABLE)->insertGetId($masterParams);
+            $masterLastInsertedId = MasterTableHelper::storeToMasterTable(USER::VENDOR_MASTER_TABLE, $masterParams);
 
             //LOG execution
             Log::info(__('messages.convo_id_label') . Session::getId() . ' SQL QUERY: ' . serialize(DB::getQueryLog()));
@@ -206,7 +221,7 @@ class User extends Authenticatable
                 ]
             ];
 
-            $slaveInsert = DB::table($slaveTableName)->insert($slaveParams);
+            $slaveInsert = SlaveTableHelper::storeToSlaveTable($slaveTableName, $slaveParams);
 
             //LOG execution
             Log::info(__('messages.convo_id_label') . Session::getId() . ' SQL QUERY: ' . serialize(DB::getQueryLog()));

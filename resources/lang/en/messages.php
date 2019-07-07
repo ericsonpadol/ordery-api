@@ -7,6 +7,8 @@ return [
     'status_success' => 'success',
     'header_convo' => 'X-Conversation-ID',
     'convo_id_label' => 'Conversation ID: ',
+    'log_error_label' => 'Error Code: ',
+    'log_error_message' => 'Error Message: ',
 
     /**
      * success messages

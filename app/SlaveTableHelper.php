@@ -17,11 +17,39 @@ class SlaveTableHelper extends Model
 {
     use StatusHttp;
 
+    public function __construct(array $attributes = [])
+    {
+        parent::__construct($attributes);
+
+        DB::connection()->enableQueryLog();
+        $this->_logger = new Logger('MasterTableHelper');
+        $this->_logger->pushHandler(new StreamHandler('php://stderr', Logger::INFO));
+    }
+
     public static function removeMultiWhitespaceDash($string)
     {
         //remove multiple whitespaces and dashes
-        return trim(preg_replace("/[\s-]+/", "_", $string));
+        return strtolower(trim(preg_replace("/[\s-]+/", "_", $string)));
+    }
 
+    public static function storeToSlaveTable($slaveTableName, array $params)
+    {
+        try {
+
+            return DB::table($slaveTableName)->insert($params);
+
+        } catch (Exception $e) {
+            //Log on Error
+            Log::error(__('messages.convo_id_label') . Session::getId() . ' | ' . __('messages.log_error_label') . $e->getCode() . ' | ' . __('messages.log_error_message') . $e->getMessage());
+
+            return [
+                'message' => $e->getMessage(),
+                'error_code' => $e->getCode(),
+                'stack_trace' => $e->getTraceAsString(),
+                'line' => $e->getLine(),
+                'http_code' => Copywrite::HTTP_CODE_500
+            ];
+        }
     }
 
     public function generateVendorSlaveTable(array $params)
@@ -65,8 +93,11 @@ class SlaveTableHelper extends Model
                 'http_code' => $this->getStatusCode500(),
                 'status' => __('messages.status_error'),
             ];
-
         } catch (Exception $e) {
+
+            //Log on Error
+            Log::error(__('messages.convo_id_label') . Session::getId() . ' | ' . __('messages.log_error_label') . $e->getCode() . ' | ' . __('messages.log_error_message') . $e->getMessage());
+
             return [
                 'message' => $e->getMessage(),
                 'error_code' => $e->getCode(),
