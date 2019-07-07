@@ -22,6 +22,8 @@ Route::group(['middlware' => ['api', 'secure.content']], function() {
     Route::post('/registration',['as' => 'registration', 'uses' => 'Api\ApiController@registration']);
 });
 
-Route::group(['middleware' => ['api', 'secure.content']], function() {
+Route::group(['middleware' => ['api', 'client.credentials', 'secure.content']], function() {
     Route::resource('/users', 'User\UserController', ['except' => ['create', 'edit']]);
 });
+
+Route::post('oauth/token ', '\Laravel\Passport\Http\Controllers\AccessTokenController@issueToken');
