@@ -13,7 +13,6 @@ use Session;
 use Illuminate\Support\Facades\Schema;
 use Laravel\Passport\HasApiTokens;
 
-
 //helpers
 use App\SlaveTableHelper;
 use App\MasterTableHelper;
@@ -130,9 +129,56 @@ class User extends Authenticatable
         }
     }
 
-    public function createNewSubscriber($slaveTable, array $params)
+    public function updateUserAccount(array $params)
     {
+        try {
+            if (empty($params)) {
+                return [
+                    'message' => __('messages.error_processing'),
+                    'http_code' => StatusHttp::getStatusCode400(),
+                    'status' => __('messages.status_error'),
+                ];
+            }
 
+            //find user account
+            $user = User::find($params['id']);
+
+            //fetch user account on vendors master table
+            $userProfile = DB::table('users_vendors')
+                ->select('tbl_vendors', 'id')
+                ->where('user_id', $params['id'])
+                ->get();
+
+            //update user profile details
+            if ($user->update($params) && $userProfile) {
+
+                $userProfile->map(function($master) {
+                    DB::table($master->tbl_vendors)
+                        ->where('vendor_master_id', $master->id)
+                        ->update($params);
+                });
+
+                return [
+                    'message' => __('messages.useraccount_update_success'),
+                    'http_code' => StatusHttp::getStatusCode200(),
+                    'status' => __('messages.status_success'),
+                ];
+            } else {
+                return [
+                    'message' => __('messages.error_processing'),
+                    'http_code' => StatusHttp::getStatusCode400(),
+                    'status' => __('messages.status_error'),
+                ];
+            }
+        } catch (Exception $e) {
+            return [
+                'message' => $e->getMessage(),
+                'error_code' => $e->getCode(),
+                'stack_trace' => $e->getTraceAsString(),
+                'line' => $e->getLine(),
+                'http_code' => StatusHttp::getStatusCode500()
+            ];
+        }
     }
 
     public function userRegistration(array $params)
