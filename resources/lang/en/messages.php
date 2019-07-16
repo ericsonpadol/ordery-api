@@ -16,6 +16,8 @@ return [
     'success_slave_table' => 'Slave Table Created',
     'registration_success' => 'User Registered Successfully.',
     'useraccount_update_success' => 'User Account Updated',
+    'useraccount_deactivated' => 'User Account Deactivated',
+    'useraccount_restored' => 'User Account Restored',
 
     /**
      * error messages

@@ -122,6 +122,40 @@ class UserController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $user = User::find($id);
+
+        if (!$user) {
+            return response()->json([
+                'message' => __('messages.user_not_found'),
+                'status' => __('messages.status_error'),
+                'http_code' => $this->getStatusCode404(),
+            ], $this->getStatusCode404());
+        }
+
+        $result = User::deactivateAccount($id);
+
+        return response()->json($result);
+    }
+
+    public function restoreAccount(Request $request)
+    {
+        $user = User::withTrashed()->where('email', $request->email)->get();
+
+        if (!$user) {
+            return response()->json([
+                'message' => __('messages.user_not_found'),
+                'status' => __('messages.status_error'),
+                'http_code' => $this->getStatusCode404(),
+            ], $this->getStatusCode404());
+        }
+
+        $id = $user->map(function ($o) {
+            return collect($o->toArray())
+                ->only(['id', 'email']);
+        });
+
+        $result = User::restoreAccount($id);
+
+        return response()->json($result);
     }
 }

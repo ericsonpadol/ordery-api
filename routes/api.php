@@ -25,6 +25,7 @@ Route::group(['middlware' => ['api', 'secure.content']], function() {
 
 Route::group(['middleware' => ['api', 'secure.content']], function() {
     Route::resource('/users', 'User\UserController', ['except' => ['create', 'edit']]);
+    Route::post('/users/restore-account', 'User\UserController@restoreAccount');
 });
 
 Route::post('oauth/token ', '\Laravel\Passport\Http\Controllers\AccessTokenController@issueToken');
