@@ -12,7 +12,10 @@
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return response()->json([
+        'message' => 'api running',
+        'uptime' => microtime(true)
+    ]);
 });
 
 Route::get('/app.info', function() {
