@@ -3,6 +3,7 @@
 namespace App\Http;
 
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
+use Laravel\Passport\Http\Middleware\CheckClientCredentials;
 
 class Kernel extends HttpKernel
 {
@@ -57,7 +58,7 @@ class Kernel extends HttpKernel
         'bindings' => \Illuminate\Routing\Middleware\SubstituteBindings::class,
         'cors' => \Barryvdh\Cors\HandleCors::class,
         'can' => \Illuminate\Auth\Middleware\Authorize::class,
-        'client.credetials' => \Laravel\Passport\Http\Middleware\CheckClientCredentials::class,
+        'client' => CheckClientCredentials::class,
         'guest' => \App\Http\Middleware\RedirectIfAuthenticated::class,
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'secure.content' => \Stevenmaguire\Laravel\Http\Middleware\EnforceContentSecurity::class,

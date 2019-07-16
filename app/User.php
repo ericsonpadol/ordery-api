@@ -13,7 +13,6 @@ use Session;
 use Illuminate\Support\Facades\Schema;
 use Laravel\Passport\HasApiTokens;
 
-
 //helpers
 use App\SlaveTableHelper;
 use App\MasterTableHelper;
@@ -28,12 +27,10 @@ class User extends Authenticatable
     const ADMIN_ENABLED = 'true';
     const ADMIN_DISABLED = 'false';
     const VENDOR_MASTER_TABLE = 'users_vendors';
-
     protected $primaryKey = 'id';
     protected $table = 'users';
-
-
     private $_logger = '';
+    private $_paramsProfile = '';
 
     /**
      * The attributes that are mass assignable.
@@ -130,9 +127,117 @@ class User extends Authenticatable
         }
     }
 
-    public function createNewSubscriber($slaveTable, array $params)
+    public static function deactivateAccount($id)
     {
+        try {
+            if (User::find($id)->delete()) {
+                return [
+                    'message' => __('messages.useraccount_deactivated'),
+                    'http_code' => StatusHttp::getStatusCode200(),
+                    'status' => __('messages.status_success')
+                ];
+            } else {
+                return [
+                    'message' => __('messages.error_processing'),
+                    'http_code' => StatusHttp::getStatusCode500(),
+                    'status' => __('messages.status_error'),
+                ];
+            }
+        } catch (Exception $e) {
+            return [
+                'message' => $e->getMessage(),
+                'error_code' => $e->getCode(),
+                'stack_trace' => $e->getTraceAsString(),
+                'line' => $e->getLine(),
+                'http_code' => StatusHttp::getStatusCode500()
+            ];
+        }
+    }
 
+    public static function restoreAccount($id)
+    {
+        try {
+            if (User::withTrashed()
+                ->where('id', $id)
+                ->restore()
+            ) {
+                return [
+                    'message' => __('messages.useraccount_restored'),
+                    'http_code' => StatusHttp::getStatusCode200(),
+                    'status' => __('messages.status_success')
+                ];
+            } else {
+                return [
+                    'message' => __('messages.error_processing'),
+                    'http_code' => StatusHttp::getStatusCode500(),
+                    'status' => __('messages.status_error'),
+                ];
+            }
+        } catch (Exception $e) {
+            return [
+                'message' => $e->getMessage(),
+                'error_code' => $e->getCode(),
+                'stack_trace' => $e->getTraceAsString(),
+                'line' => $e->getLine(),
+                'http_code' => StatusHttp::getStatusCode500()
+            ];
+        }
+    }
+
+    public function updateUserAccount(array $params)
+    {
+        $this->_paramsProfile = $params;
+
+        try {
+            if (empty($this->_paramsProfile)) {
+                return [
+                    'message' => __('messages.error_processing'),
+                    'http_code' => StatusHttp::getStatusCode400(),
+                    'status' => __('messages.status_error'),
+                ];
+            }
+
+            //find user account
+            $user = User::find($this->_paramsProfile['id']);
+
+            //fetch user account on vendors master table
+            $userProfile = DB::table('users_vendors')
+                ->select('tbl_vendors', 'id')
+                ->where('user_id', $this->_paramsProfile['id'])
+                ->get();
+
+            //update user profile details
+            if ($user->update($this->_paramsProfile) && $userProfile) {
+                //temporary blacklist keys
+                $tempRemoveKeys = ['email', 'mobile_number', 'account_type'];
+                $tempParamsProfile = array_diff_key($this->_paramsProfile, array_flip($tempRemoveKeys));
+                $userProfile->map(function ($master) use ($tempParamsProfile) {
+                    DB::table($master->tbl_vendors)
+                        ->where('vendor_master_id', $master->id)
+                        ->update($tempParamsProfile);
+                });
+
+                return [
+                    'message' => __('messages.useraccount_update_success'),
+                    'http_code' => StatusHttp::getStatusCode200(),
+                    'status' => __('messages.status_success'),
+                ];
+            } else {
+                return [
+                    'message' => __('messages.error_processing'),
+                    'http_code' => StatusHttp::getStatusCode400(),
+                    'status' => __('messages.status_error'),
+                ];
+            }
+        } catch (Exception $e) {
+            return [
+                'message' => $e->getMessage(),
+                'error_code' => $e->getCode(),
+                'stack_trace' => $e->getTraceAsString(),
+                'line' => $e->getLine(),
+                'http_code' => StatusHttp::getStatusCode500()
+            ];
+        }
     }
 
     public function userRegistration(array $params)

@@ -15,6 +15,11 @@ class ApiController extends Controller
 {
     use StatusHttp;
 
+    public function login(Request $request)
+    {
+        return $request;
+    }
+
     public function registration(Request $request)
     {
         $user = new User();

@@ -20,10 +20,12 @@ use Illuminate\Http\Request;
 //non token based routing
 Route::group(['middlware' => ['api', 'secure.content']], function() {
     Route::post('/registration',['as' => 'registration', 'uses' => 'Api\ApiController@registration']);
+    Route::post('/login', ['as' => 'login', 'uses' => 'Api\ApiController@login']);
 });
 
-Route::group(['middleware' => ['api', 'client.credentials', 'secure.content']], function() {
+Route::group(['middleware' => ['api', 'secure.content']], function() {
     Route::resource('/users', 'User\UserController', ['except' => ['create', 'edit']]);
+    Route::post('/users/restore-account', 'User\UserController@restoreAccount');
 });
 
 Route::post('oauth/token ', '\Laravel\Passport\Http\Controllers\AccessTokenController@issueToken');
