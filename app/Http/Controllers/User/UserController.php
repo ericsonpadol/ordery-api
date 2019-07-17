@@ -9,6 +9,7 @@ use App\Traits\StatusHttp;
 
 use Session;
 use Validator;
+use function GuzzleHttp\Promise\all;
 
 class UserController extends Controller
 {

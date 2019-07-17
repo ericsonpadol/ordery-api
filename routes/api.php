@@ -23,7 +23,7 @@ Route::group(['middlware' => ['api', 'secure.content']], function() {
     Route::post('/login', ['as' => 'login', 'uses' => 'Api\ApiController@login']);
 });
 
-Route::group(['middleware' => ['api', 'secure.content']], function() {
+Route::group(['middleware' => ['api', 'auth:api', 'client.credentials', 'secure.content']], function() {
     Route::resource('/users', 'User\UserController', ['except' => ['create', 'edit']]);
     Route::post('/users/restore-account', 'User\UserController@restoreAccount');
 });
