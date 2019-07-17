@@ -12,11 +12,8 @@
 */
 
 Route::get('/', function () {
-    return response()->json([
-        'message' => 'api running',
-        'uptime' => microtime(true)
-    ]);
-});
+    return view('welcome');
+})->middleware('guest');
 
 Route::get('/app.info', function() {
     echo '<pre>' ;
@@ -26,3 +23,11 @@ Route::get('/app.info', function() {
     }
     echo '</pre>';
 });
+// Auth::routes();
+
+Route::get('auth/register', [
+    'as' => 'register',
+    'uses' => 'Auth\RegisterController@register '
+  ]);
+
+Route::get('/home', 'HomeController@index')->name('home');
