@@ -78,6 +78,11 @@ class User extends Authenticatable
         $this->_logger->pushHandler(new StreamHandler('php://stderr', Logger::INFO));
     }
 
+    public function accounts()
+    {
+        return $this->hasMany(App\SocialAccount::class);
+    }
+
     /**
      * return if user is verified
      * @return string
