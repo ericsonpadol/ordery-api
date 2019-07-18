@@ -13,7 +13,8 @@
         "laravel/tinker": "~1.0",
         "monolog/monolog": "^1.24",
         "ramsey/uuid": "^3.8",
-        "stevenmaguire/laravel-middleware-csp": "^0.1.1"
+        "stevenmaguire/laravel-middleware-csp": "^0.1.1",
+        "laravel/socialite": "3.3.0"
     },
     "require-dev": {
         "filp/whoops": "~2.0",

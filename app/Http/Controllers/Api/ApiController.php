@@ -17,7 +17,35 @@ class ApiController extends Controller
 
     public function login(Request $request)
     {
-        return $request;
+        $credentials = [
+            'email' => $request->email,
+            'password' => $request->password
+        ];
+
+        if (auth()->attempt($credentials)) {
+            $accessToken = auth()->user()->createToken('secret_ordery')->accessToken;
+
+            return response()->json([
+                'access_token' => $accessToken,
+                'http_code' => $this->getStatusCode200(),
+                'status' => __('messages.status_success')
+            ], $this->getStatusCode200());
+        } else {
+            return response()->json([
+                'message' => __('messages.unauthorized_login'),
+                'http_code' => $this->getStatusCode401(),
+                'status' => __('messages.status_error')
+            ], $this->getStatusCode401());
+        }
+    }
+
+    public function userDetails()
+    {
+        return response()->json([
+            'data' => auth()->user(),
+            'http_code' => $this->getStatusCode200(),
+            'status' => __('messages.status_success'),
+        ], $this->getStatusCode200());
     }
 
     public function registration(Request $request)
@@ -50,81 +78,5 @@ class ApiController extends Controller
         $result = $user->userRegistration($params);
 
         return response()->json($result);
-    }
-
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
-    {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
     }
 }

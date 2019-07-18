@@ -12,9 +12,9 @@ class UserSeeder extends Seeder
      */
     public function run()
     {
-        $userQuantity = 20;
+        // $userQuantity = 20;
 
-        factory(User::class, $userQuantity)->create();
+        // factory(User::class, $userQuantity)->create();
 
         //inject power user
         $powerUser = [

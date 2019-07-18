@@ -25,6 +25,9 @@ Route::get('/app.info', function() {
 });
 // Auth::routes();
 
+Route::get('/login/{provider}', ['as' => 'social-login', 'uses' => 'Auth\SocialAccountController@redirectToProvider']);
+Route::get('/login/{provider}/callback', ['as' => 'social-login-callback', 'uses' => 'Auth\SocialAccountController@handleProviderCallback']);
+
 Route::get('auth/register', [
     'as' => 'register',
     'uses' => 'Auth\RegisterController@register '

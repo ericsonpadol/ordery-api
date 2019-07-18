@@ -26,4 +26,5 @@ return [
     'registration_failure' => 'Sorry! I cannot register this user',
     'error_processing' => 'I cannot process your request, at this moment.',
     'user_not_found' => 'user not found.',
+    'unauthorized_login' => 'Unauthorized',
 ];
