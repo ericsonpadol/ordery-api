@@ -13,15 +13,13 @@ class SocialAccountController extends Controller
 {
     public function redirectToProvider($provider)
     {
-        return Socialite::driver($provider)->stateless()->user();
+        return Socialite::driver($provider)->user();
     }
 
     public function handleProviderCallback($provider)
     {
         try {
-            $user = Socialite::driver($provider)
-                ->stateless()
-                ->user();
+            $user = Socialite::driver($provider)->user();
 
             $authUser = $this->findUser($user, $provider);
 
