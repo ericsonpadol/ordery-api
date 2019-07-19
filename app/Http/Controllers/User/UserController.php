@@ -58,7 +58,14 @@ class UserController extends Controller
      */
     public function show($id)
     {
-        //
+        $user = new User();
+
+        $result = $user->getUserDetails($id);
+
+        return response()
+            ->json($result, $result['http_code'])
+            ->header(__('messages.header_convo'), Session::getId());
+
     }
 
     /**

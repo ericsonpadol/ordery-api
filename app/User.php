@@ -112,6 +112,53 @@ class User extends Authenticatable
         ];
     }
 
+    public function getUserDetails($id)
+    {
+        //check user on the master table
+        $userMaster = DB::table(USER::VENDOR_MASTER_TABLE)
+            ->where('user_id', '=', $id)
+            ->first();
+
+        if (!$userMaster) {
+            return [
+                'message' => __('messages.error_processing'),
+                'http_code' => StatusHttp::getStatusCode500(),
+                'status' => __('messages.status_error'),
+            ];
+        }
+
+        //get user account information
+        $userAccount = DB::table(USER::VENDOR_MASTER_TABLE)
+            ->join($this->table, $this->table . '.id', '=', USER::VENDOR_MASTER_TABLE . '.user_id')
+            ->where(USER::VENDOR_MASTER_TABLE . '.user_id', '=', $id)
+            ->select(
+                $this->table . '.email',
+                $this->table . '.mobile_number',
+                $this->table . '.is_admin',
+                $this->table . '.is_verified',
+                $this->table . '.account_type',
+                $this->table . '.created_at',
+                USER::VENDOR_MASTER_TABLE . '.id',
+                USER::VENDOR_MASTER_TABLE . '.tbl_vendors'
+            )
+            ->first();
+
+        //get user details union query
+        $userDetails = DB::table($userAccount->tbl_vendors)
+            ->where($userAccount->account_type . '_master_id', '=', $userAccount->id)
+            ->first();
+
+        $userInfo = (object) array_merge((array) $userAccount, (array) $userDetails);
+
+        Log::debug(__('messages.convo_id_label') .  Session::getId() . serialize(DB::getQueryLog()));
+
+        return [
+            'data' => $userInfo ? $userInfo : [],
+            'http_code' => StatusHttp::getStatusCode200(),
+            'status' => __('messages.status_success'),
+        ];
+    }
+
     public static function getAllUsers()
     {
         try {
@@ -248,13 +295,28 @@ class User extends Authenticatable
     public function userRegistration(array $params)
     {
         $slaveTable = new SlaveTableHelper();
-        $slaveTableName = SlaveTableHelper::removeMultiWhitespaceDash('fv_' . $params['addr_city'] . '_' . date('Y'));
+        //check if customer account type
+        switch ($params['account_type']) {
+            case ('vendor'):
+                $tablePrefix = 'vendor_';
+                break;
+            case ('sa'):
+                $tablePrefix = 'sa_';
+                break;
+            case ('rider'):
+                $tablePrefix = 'rider_';
+                break;
+            default:
+                $tablePrefix = 'customer_';
+                break;
+        }
+        $slaveTableName = SlaveTableHelper::removeMultiWhitespaceDash($tablePrefix . $params['addr_city'] . '_' . date('Y'));
 
         try {
             //check if city for table is not yet being created
             if (isset($params['addr_city']) && !Schema::hasTable($slaveTableName)) {
                 //create slave table
-                $tableParams = array('table_name' => $slaveTableName);
+                $tableParams = array('table_name' => $slaveTableName , 'account_type' => $params['account_type']);
 
                 $result = $slaveTable->generateVendorSlaveTable($tableParams);
 
@@ -317,7 +379,7 @@ class User extends Authenticatable
             //preapare slave insert parameters
             $slaveParams = [
                 [
-                    'vendor_master_id' => $masterLastInsertedId,
+                    $params['account_type'] . '_master_id' => $masterLastInsertedId,
                     'full_name' => $params['full_name'],
                     'addr_street' => isset($params['addr_street']) ? $params['addr_street'] : null,
                     'addr_brgy' => isset($params['addr_brgy']) ? $params['addr_brgy'] : null,
