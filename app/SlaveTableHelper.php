@@ -58,7 +58,7 @@ class SlaveTableHelper extends Model
 
         $sql = 'CREATE TABLE ' . $sanitizeString . '('
             . 'id int unsigned NOT NULL AUTO_INCREMENT PRIMARY KEY, '
-            . 'vendor_master_id int UNSIGNED NOT NULL, '
+            . $params['account_type'] . '_master_id int UNSIGNED NOT NULL, '
             . 'full_name varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL, '
             . 'addr_street text COLLATE utf8mb4_unicode_ci, '
             . 'addr_brgy text COLLATE utf8mb4_unicode_ci, '
@@ -74,7 +74,7 @@ class SlaveTableHelper extends Model
             . 'INDEX idx_city(addr_city), '
             . 'INDEX idx_zip(addr_zip), '
             . 'INDEX idx_store(store_name),'
-            . 'FOREIGN KEY fk_vendor_master(vendor_master_id) REFERENCES users_vendors(id)'
+            . 'FOREIGN KEY fk_' . $params['account_type'] . '_master(' . $params['account_type'] . '_master_id) REFERENCES users_vendors(id)'
             .  ') ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci';
 
         try {
