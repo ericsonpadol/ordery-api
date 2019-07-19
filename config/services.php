@@ -36,8 +36,8 @@ return [
     ],
 
     'facebook' => [
-        'client_id' => '904835439868330',
-        'client_secret' => 'a8920e3bd0b2b23b9739267c17060f19',
-        'redirect' => 'http://ordery-api.local/login/facebook/callback'
+        'client_id' => env('FACEBOOK_APP_ID'),
+        'client_secret' => env('FACEBOOK_APP_SECRET'),
+        'redirect' => env('FACEBOOK_APP_REDIRECT'),
     ],
 ];
