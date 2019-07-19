@@ -19,7 +19,8 @@ class SlaveTableHelperTest extends TestCase
      */
     public function it_can_create_a_slave_table()
     {
-        $data = array('table_name' => 'fv_' . $this->faker->city . '_' . date('Y'));
+        $accountType = 'vendor';
+        $data = array('table_name' => $accountType . '_' . $this->faker->city . '_' . date('Y') , 'account_type' => $accountType);
         $sanitizeString = SlaveTableHelper::removeMultiWhitespaceDash($data['table_name']);
 
         $slaveTableHelper = new SlaveTableHelper();
