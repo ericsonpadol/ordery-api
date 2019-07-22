@@ -10,10 +10,11 @@ use App\User;
 //helper
 use Validator;
 use App\Traits\StatusHttp;
+use App\Traits\AccountSecurity;
 
 class ApiController extends Controller
 {
-    use StatusHttp;
+    use StatusHttp, AccountSecurity;
 
     public function login(Request $request)
     {
@@ -21,6 +22,11 @@ class ApiController extends Controller
             'email' => $request->email,
             'password' => $request->password
         ];
+
+        //check if account is active
+        if ($this->isAccountActive($credentials) === false) {
+
+        }
 
         if (auth()->attempt($credentials)) {
             $accessToken = auth()->user()->createToken('secret_ordery')->accessToken;

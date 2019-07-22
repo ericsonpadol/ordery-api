@@ -17,10 +17,11 @@ use Laravel\Passport\HasApiTokens;
 use App\SlaveTableHelper;
 use App\MasterTableHelper;
 use App\Traits\StatusHttp;
+use App\Traits\AccountSecurity;
 
 class User extends Authenticatable
 {
-    use Notifiable, SoftDeletes, StatusHttp, HasApiTokens;
+    use Notifiable, SoftDeletes, StatusHttp, HasApiTokens, AccountSecurity;
 
     const VERIFIED_USER = 'true';
     const UNVERIFIED_USER = 'false';

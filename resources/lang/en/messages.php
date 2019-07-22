@@ -27,4 +27,5 @@ return [
     'error_processing' => 'I cannot process your request, at this moment.',
     'user_not_found' => 'user not found.',
     'unauthorized_login' => 'Unauthorized',
+    'account_not_verified' => 'account is not verified',
 ];
