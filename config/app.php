@@ -230,4 +230,10 @@ return [
 
     ],
 
+    /**
+     * Database Tables Parameters
+     */
+    'db_tables_map' => [
+        'tbl_users_security_questions' => 'users_security_questions'
+    ],
 ];

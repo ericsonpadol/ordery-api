@@ -18,6 +18,7 @@ return [
     'useraccount_update_success' => 'User Account Updated',
     'useraccount_deactivated' => 'User Account Deactivated',
     'useraccount_restored' => 'User Account Restored',
+    'security_questions_success' => 'Security Questions Saved Successfully.',
 
     /**
      * error messages
@@ -28,4 +29,5 @@ return [
     'user_not_found' => 'user not found.',
     'unauthorized_login' => 'Unauthorized',
     'account_not_verified' => 'account is not verified',
+    'empty_security_questions' => 'no security questions found',
 ];
