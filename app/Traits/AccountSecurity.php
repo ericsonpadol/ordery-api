@@ -2,6 +2,8 @@
 
 namespace App\Traits;
 
+use DB;
+
 trait AccountSecurity
 {
     public function isAccountActive(array $params = [], $table = 'users')
