@@ -11,10 +11,13 @@ use App\User;
 use Validator;
 use App\Traits\StatusHttp;
 use App\Traits\AccountSecurity;
+use Session;
+use Log;
+use App\Traits\MailHelper;
 
 class ApiController extends Controller
 {
-    use StatusHttp, AccountSecurity;
+    use StatusHttp, AccountSecurity, MailHelper;
 
     public function login(Request $request)
     {
@@ -25,7 +28,12 @@ class ApiController extends Controller
 
         //check if account is active
         if ($this->isAccountActive($credentials) === false) {
-
+            return response()->json([
+                'message' => __('messages.unverified_account'),
+                'http_code' => $this->getStatusCode401(),
+                'status' => __('messages.status_error')
+            ], $this->getStatusCode401())
+                ->header(__('messages.header_convo'), Session::getId());
         }
 
         if (auth()->attempt($credentials)) {
@@ -35,13 +43,13 @@ class ApiController extends Controller
                 'access_token' => $accessToken,
                 'http_code' => $this->getStatusCode200(),
                 'status' => __('messages.status_success')
-            ], $this->getStatusCode200());
+            ], $this->getStatusCode200())->header(__('messages.header_convo'), Session::getId());
         } else {
             return response()->json([
                 'message' => __('messages.unauthorized_login'),
                 'http_code' => $this->getStatusCode401(),
                 'status' => __('messages.status_error')
-            ], $this->getStatusCode401());
+            ], $this->getStatusCode401())->header(__('messages.header_convo'), Session::getId());
         }
     }
 
@@ -51,7 +59,7 @@ class ApiController extends Controller
             'data' => auth()->user(),
             'http_code' => $this->getStatusCode200(),
             'status' => __('messages.status_success'),
-        ], $this->getStatusCode200());
+        ], $this->getStatusCode200())->header(__('messages.header_convo'), Session::getId());
     }
 
     public function registration(Request $request)
@@ -76,13 +84,18 @@ class ApiController extends Controller
                 'message' => $validator->errors(),
                 'http_code' => $this->getStatusCode400(),
                 'status' => __('messages.status_error')
-            ], $this->getStatusCode400());
+            ], $this->getStatusCode400())->header(__('messages.header_convo'), Session::getId());
         }
 
         $params = $request->all();
 
         $result = $user->userRegistration($params);
 
-        return response()->json($result);
+        if ($result === 'success') {
+            //fire an email to the subscriber account
+            $this->accountVerificationMail();
+        }
+
+        return response()->json($result)->header(__('messages.header_convo'), Session::getId());
     }
 }

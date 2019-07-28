@@ -21,11 +21,11 @@ use Illuminate\Http\Request;
 Route::group(['middlware' => ['api', 'secure.content']], function() {
     Route::post('/registration',['as' => 'registration', 'uses' => 'Api\ApiController@registration']);
     Route::post('/login', ['as' => 'login', 'uses' => 'Api\ApiController@login']);
+    Route::resource('/security-questions', 'AccountSecurity\UserSecurityQuestionController', ['except' => ['create', 'edit']]);
 });
 
-Route::group(['middleware' => ['api', 'secure.content']], function() {
+Route::group(['middleware' => ['api', 'auth:api', 'secure.content']], function() {
     Route::resource('/users', 'User\UserController', ['except' => ['create', 'edit']]);
-    Route::resource('/security-questions', 'AccountSecurity\UserSecurityQuestionController', ['except' => ['create', 'edit']]);
     Route::post('/users/restore-account', 'User\UserController@restoreAccount');
     Route::get('/auth/user-details', ['as' => 'user-details', 'uses' => 'Api\ApiController@userDetails']);
 
