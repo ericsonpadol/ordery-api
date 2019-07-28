@@ -30,4 +30,16 @@ return [
     'unauthorized_login' => 'Unauthorized',
     'account_not_verified' => 'account is not verified',
     'empty_security_questions' => 'no security questions found',
+    'unverified_account' => 'account is not verified',
+
+    /**
+     * mail spiel
+     */
+    'verification_email_subject' => 'Ordery Account Verification',
+    'verification_email_body' => 'You\'re nearly there! <strong>:full_name:</strong>. <br>'
+        . 'We just need to verify your email address to complete your registration. <br>'
+        . '<a href=":activation_link:">:activation_spiel:</a><br>'
+        . 'Please click on the link to activate your account. <br>'
+        . 'If you have not regstered to Ordery, please ignore this email',
+    'verification_email_activation_spiel' => 'Click this link to verify your account.',
 ];
