@@ -33,4 +33,4 @@ Route::get('auth/register', [
     'uses' => 'Auth\RegisterController@register '
   ]);
 
-Route::get('/home', 'HomeController@index')->name('home');
+// Route::get('/home', 'HomeController@index')->name('home');

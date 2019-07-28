@@ -95,7 +95,7 @@ class UserController extends Controller
                 'message' => __('messages.user_not_found'),
                 'status' => __('messages.status_error'),
                 'http_code' => $this->getStatusCode404(),
-            ], $this->getStatusCode404());
+            ], $this->getStatusCode404())->header(__('messages.header_convo'), Session::getId());
         }
 
         $values = $request->except(array('password'));
@@ -111,7 +111,7 @@ class UserController extends Controller
                 'message' => $validator->errors(),
                 'http_code' => $this->getStatusCode400(),
                 'status' => __('messages.status_error')
-            ], $this->getStatusCode400());
+            ], $this->getStatusCode400())->header(__('messages.header_convo'), Session::getId());
         }
 
         $userObj = new User();
@@ -119,7 +119,7 @@ class UserController extends Controller
 
         $result = $userObj->updateUserAccount($values);
 
-        return response()->json($result);
+        return response()->json($result)->header(__('messages.header_convo'), Session::getId());
     }
 
     /**
@@ -142,7 +142,7 @@ class UserController extends Controller
 
         $result = User::deactivateAccount($id);
 
-        return response()->json($result);
+        return response()->json($result)->header(__('messages.header_convo'), Session::getId());
     }
 
     public function restoreAccount(Request $request)
@@ -164,6 +164,6 @@ class UserController extends Controller
 
         $result = User::restoreAccount($id);
 
-        return response()->json($result);
+        return response()->json($result)->header(__('messages.header_convo'), Session::getId());
     }
 }
