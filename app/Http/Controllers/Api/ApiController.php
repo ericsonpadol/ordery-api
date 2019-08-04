@@ -91,11 +91,43 @@ class ApiController extends Controller
 
         $result = $user->userRegistration($params);
 
-        if ($result === 'success') {
+        if ($result['status'] === 'success') {
             //fire an email to the subscriber account
-            $this->accountVerificationMail();
+            $this->accountVerificationMail([
+                'to_name' => $request->full_name,
+                'to_email' => $request->email,
+                'activation_link' => url('user/verify') . '?active=' . $user->userVerificationCode . '&account=' . $request->email,
+            ]);
         }
 
         return response()->json($result)->header(__('messages.header_convo'), Session::getId());
+    }
+
+    public function verification(Request $request)
+    {
+        //check user account
+        $user = User::where('email', $request->account);
+
+        if (!$user) {
+            return response()->json([
+                'message' => __('messages.user_not_found'),
+                'status' => __('messages.status_error'),
+            ]);
+        }
+
+        //updater user account to verified status
+        try {
+            $user->where('active', $request->active)
+                ->update(['is_verified' => USER::VERIFIED_USER]);
+
+        } catch (Exception $e) {
+            return [
+                'message' => $e->getMessage(),
+                'error_code' => $e->getCode(),
+                'stack_trace' => $e->getTraceAsString(),
+                'line' => $e->getLine(),
+                'http_code' => StatusHttp::getStatusCode500()
+            ];
+        }
     }
 }
