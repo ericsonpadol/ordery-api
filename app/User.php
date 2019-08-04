@@ -28,6 +28,8 @@ class User extends Authenticatable
     const ADMIN_ENABLED = 'true';
     const ADMIN_DISABLED = 'false';
     const VENDOR_MASTER_TABLE = 'users_vendors';
+
+    public $userVerificationCode;
     protected $primaryKey = 'id';
     protected $table = 'users';
     private $_logger = '';
@@ -295,6 +297,7 @@ class User extends Authenticatable
 
     public function userRegistration(array $params)
     {
+        $this->userVerificationCode = User::generateVerificationCode();
         $slaveTable = new SlaveTableHelper();
         //check if customer account type
         switch ($params['account_type']) {
@@ -337,7 +340,7 @@ class User extends Authenticatable
                 'is_admin' => isset($params['is_admin']) ? User::ADMIN_ENABLED : User::ADMIN_DISABLED,
                 'is_verified' => User::UNVERIFIED_USER,
                 'account_type' => $params['account_type'],
-                'verification_token' => User::generateVerificationCode(),
+                'verification_token' => $this->userVerificationCode,
             ];
 
             //create new registered user

@@ -22,6 +22,7 @@ Route::group(['middlware' => ['api', 'secure.content']], function() {
     Route::post('/registration',['as' => 'registration', 'uses' => 'Api\ApiController@registration']);
     Route::post('/login', ['as' => 'login', 'uses' => 'Api\ApiController@login']);
     Route::resource('/security-questions', 'AccountSecurity\UserSecurityQuestionController', ['except' => ['create', 'edit']]);
+    Route::get('/account-verification', ['as' => 'verification', 'uses' => 'Api\ApiController@verification']);
 });
 
 Route::group(['middleware' => ['api', 'auth:api', 'secure.content']], function() {
