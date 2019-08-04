@@ -166,4 +166,6 @@ class UserController extends Controller
 
         return response()->json($result)->header(__('messages.header_convo'), Session::getId());
     }
+
+
 }
