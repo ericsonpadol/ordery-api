@@ -14,9 +14,9 @@ class CreateStoreTable extends Migration
     public function up()
     {
         Schema::create('stores', function (Blueprint $table) {
-            $table->engine = 'InnoDB';
             $table->increments('id');
             $table->string('user_account', 191);
+            $table->string('food_category_id', 191);
             $table->string('store_id', 191)
                 ->unique();
             $table->string('store_name', 191);
@@ -40,11 +40,15 @@ class CreateStoreTable extends Migration
             $table->integer('zipcode')
                 ->unsigned()
                 ->default(0);
+            $table->text('image_uri')
+                ->nullable();
             $table->timestamps();
+
             //foreign key
             $table->foreign('user_account')
                 ->references('user_account')
                 ->on('users');
+            $table->index('food_category_id');
         });
     }
 

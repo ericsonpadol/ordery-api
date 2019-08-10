@@ -24,7 +24,7 @@ class FoodcategoryController extends Controller
             'data' => $foodCategories ?  $foodCategories : [],
             'http_code' => $this->getStatusCode200(),
             'status' => __('messages.status_success'),
-        ]);
+        ])->header(__('messages.header_convo'), Session::getId());
     }
 
     /**
