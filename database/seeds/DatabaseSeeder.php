@@ -3,6 +3,7 @@
 use Illuminate\Database\Seeder;
 use App\User;
 use App\SecurityQuestion;
+use App\Foodcategory;
 use Illuminate\Support\Facades\DB;
 
 class DatabaseSeeder extends Seeder
@@ -18,8 +19,10 @@ class DatabaseSeeder extends Seeder
         DB::statement('SET FOREIGN_KEY_CHECKS = 0');
         User::truncate();
         SecurityQuestion::truncate();
+        Foodcategory::truncate();
 
         $this->call('UserSeeder');
         $this->call('SecurityQuestionSeeder');
+        $this->call('FoodcategorySeed');
     }
 }
