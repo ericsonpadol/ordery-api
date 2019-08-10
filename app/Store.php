@@ -22,6 +22,7 @@ class Store extends Model
     protected $usersVendorsTable = 'users_vendors';
     protected $fillable = [
         'user_account',
+        'food_category_id',
         'store_id',
         'store_name',
         'address',
@@ -34,6 +35,7 @@ class Store extends Model
         'store_opens_at',
         'store_closes_at',
         'zipcode',
+        'image_uri',
     ];
 
     /**
@@ -81,6 +83,7 @@ class Store extends Model
             'store_lat' => $params['store_lat'],
             'store_long' => $params['store_long'],
             'zipcode' => $params['zipcode'],
+            'food_category_id' => $params['food_category_id'],
         ];
 
         try {

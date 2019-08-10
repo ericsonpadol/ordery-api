@@ -65,6 +65,7 @@ class User extends Authenticatable
         'mobile_number',
         'remember_token',
         'user_account',
+        'image_uri',
     ];
 
     protected $date = [

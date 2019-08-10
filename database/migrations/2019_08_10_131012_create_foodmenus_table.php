@@ -15,13 +15,18 @@ class CreateFoodmenusTable extends Migration
     {
         Schema::create('foodmenus', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('food_menu_id', 191); //uuid version 4
+            $table->string('food_menu_id', 191)
+                ->unique(); //uuid version 4
             $table->string('food_menu_name', 191);
             $table->text('food_menu_description');
             $table->double('food_menu_price');
-            $table->string('store_id');
-            $table->text('food_category_tag'); //combination of food category id
+            $table->string('store_id', 191);
+            $table->text('image_uri')
+                ->nullable();
             $table->timestamps();
+            $table->foreign('store_id')
+                ->references('store_id')
+                ->on('stores');
         });
     }
 
