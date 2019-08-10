@@ -28,6 +28,8 @@ class CreateUsersTable extends Migration
             $table->char('is_verified', 10)->default(USER::UNVERIFIED_USER);
             $table->enum('account_type', USER::getUserAccountTypeList());
             $table->string('verification_token', 60)->nullable();
+            $table->text('image_uri')
+                ->nullable();
             $table->rememberToken();
             $table->timestamps();
             $table->softDeletes();

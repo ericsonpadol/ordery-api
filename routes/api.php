@@ -31,6 +31,7 @@ Route::group(['middleware' => ['api', 'secure.content']], function() {
     Route::get('/auth/user-details', ['as' => 'user-details', 'uses' => 'Api\ApiController@userDetails']);
     Route::resource('/stores', 'UserStoreController', ['except' => ['create', 'edit']]);
     Route::resource('/food/categories', 'FoodcategoryController', ['except' => ['create', 'edit']]);
+    Route::resource('/food/menus', 'Menu\StoreFoodmenuController', ['except' => ['create', 'edit']]);
 });
 
 Route::post('oauth/token ', '\Laravel\Passport\Http\Controllers\AccessTokenController@issueToken');
