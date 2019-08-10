@@ -2,9 +2,11 @@
 
 use Illuminate\Database\Seeder;
 use App\User;
+use App\Traits\AccountHelper;
 
 class UserSeeder extends Seeder
 {
+    use AccountHelper;
     /**
      * Run the database seeds.
      *
@@ -19,6 +21,7 @@ class UserSeeder extends Seeder
         //inject power user
         $powerUser = [
             'email' => 'ericson.padol@gadgetlabsinc.com',
+            'user_account' => $this->uuidGeneration(),
             'password' => bcrypt('secret'),
             'remember_token' => str_random(10),
             'mobile_number' => '09472421651',

@@ -2,6 +2,7 @@
 
 namespace App;
 
+//dependency
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -13,15 +14,28 @@ use Session;
 use Illuminate\Support\Facades\Schema;
 use Laravel\Passport\HasApiTokens;
 
+//Models
+use App\Store;
+
 //helpers
 use App\SlaveTableHelper;
 use App\MasterTableHelper;
 use App\Traits\StatusHttp;
 use App\Traits\AccountSecurity;
+use App\Traits\Vendor;
+use App\Traits\Rider;
+use App\Traits\Customer;
 
 class User extends Authenticatable
 {
-    use Notifiable, SoftDeletes, StatusHttp, HasApiTokens, AccountSecurity;
+    use Notifiable,
+        SoftDeletes,
+        StatusHttp,
+        HasApiTokens,
+        AccountSecurity,
+        Rider,
+        Customer,
+        Vendor;
 
     const VERIFIED_USER = 'true';
     const UNVERIFIED_USER = 'false';
@@ -50,6 +64,7 @@ class User extends Authenticatable
         'verification_token',
         'mobile_number',
         'remember_token',
+        'user_account',
     ];
 
     protected $date = [
@@ -84,6 +99,11 @@ class User extends Authenticatable
     public function accounts()
     {
         return $this->hasMany(App\SocialAccount::class);
+    }
+
+    public function stores()
+    {
+        return $this->hasMany('App\Store');
     }
 
     /**
@@ -338,9 +358,10 @@ class User extends Authenticatable
                 'mobile_number' => $params['mobile_number'],
                 'password' => bcrypt($params['password']),
                 'is_admin' => isset($params['is_admin']) ? User::ADMIN_ENABLED : User::ADMIN_DISABLED,
-                'is_verified' => User::UNVERIFIED_USER,
+                'is_verified' => User::VERIFIED_USER,
                 'account_type' => $params['account_type'],
                 'verification_token' => $this->userVerificationCode,
+                'user_account' => $this->generateVendorId(),
             ];
 
             //create new registered user
