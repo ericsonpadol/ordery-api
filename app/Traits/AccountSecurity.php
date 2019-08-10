@@ -11,7 +11,7 @@ trait AccountSecurity
         //check if account is active
         $user = DB::table($table)
             ->where('email', $params['email'])
-            ->where('is_verified', true)
+            ->where('is_verified', 'true')
             ->first();
 
         return $user ? true : false;

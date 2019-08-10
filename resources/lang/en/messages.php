@@ -19,6 +19,7 @@ return [
     'useraccount_deactivated' => 'User Account Deactivated',
     'useraccount_restored' => 'User Account Restored',
     'security_questions_success' => 'Security Questions Saved Successfully.',
+    'create_store_success' => 'New Store Created',
 
     /**
      * error messages
@@ -31,6 +32,7 @@ return [
     'account_not_verified' => 'account is not verified',
     'empty_security_questions' => 'no security questions found',
     'unverified_account' => 'account is not verified',
+    'store_not_found' => 'Store doesn\'t exists',
 
     /**
      * mail spiel
