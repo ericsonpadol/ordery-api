@@ -16,7 +16,6 @@ class CreateStoreTable extends Migration
         Schema::create('stores', function (Blueprint $table) {
             $table->increments('id');
             $table->string('user_account', 191);
-            $table->string('food_category_id', 191);
             $table->string('store_id', 191)
                 ->unique();
             $table->string('store_name', 191);
@@ -48,7 +47,6 @@ class CreateStoreTable extends Migration
             $table->foreign('user_account')
                 ->references('user_account')
                 ->on('users');
-            $table->index('food_category_id');
         });
     }
 

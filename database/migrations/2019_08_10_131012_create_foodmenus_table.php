@@ -20,13 +20,16 @@ class CreateFoodmenusTable extends Migration
             $table->string('food_menu_name', 191);
             $table->text('food_menu_description');
             $table->double('food_menu_price');
+            $table->string('food_category_id', 191);
             $table->string('store_id', 191);
             $table->text('image_uri')
                 ->nullable();
             $table->timestamps();
+            $table->softDeletes();
             $table->foreign('store_id')
                 ->references('store_id')
                 ->on('stores');
+            $table->index('food_category_id');
         });
     }
 

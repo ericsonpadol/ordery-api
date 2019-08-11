@@ -83,7 +83,6 @@ class Store extends Model
             'store_lat' => $params['store_lat'],
             'store_long' => $params['store_long'],
             'zipcode' => $params['zipcode'],
-            'food_category_id' => $params['food_category_id'],
         ];
 
         try {

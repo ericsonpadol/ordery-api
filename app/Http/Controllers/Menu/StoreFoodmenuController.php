@@ -10,9 +10,11 @@ use Session;
 use Log;
 use Validator;
 use App\Traits\AccountHelper;
+use App\Traits\StatusHttp;
 
 class StoreFoodmenuController extends Controller
 {
+    use StatusHttp, AccountHelper;
     /**
      * Display a listing of the resource.
      *
@@ -44,6 +46,7 @@ class StoreFoodmenuController extends Controller
         $rules = [
             'food_menu_name' => 'required|string|max:191',
             'food_menu_price' => 'required|numeric',
+            'food_category_id' => 'required',
             'food_menu_description' => 'required',
             'store_id' => 'required',
             'menu_tags' => 'required'
@@ -75,21 +78,22 @@ class StoreFoodmenuController extends Controller
             'food_menu_description' => $request->food_menu_description,
             'food_menu_price' => $request->food_menu_price,
             'store_id' => $request->store_id,
-            'image_uri' => $request->image_uri
+            'image_uri' => $request->image_uri,
+            'food_category_id' => $request->food_category_id,
         ];
 
         $result = $FoodMenu->createNewMenuItem($params);
 
         //store tags
 
-        foreach($request->menu_tags as $tags) {
-            $tagsParams = [
+        foreach($request->menu_tags as $tag) {
+            $tagParams = [
                 'store_id' => $request->store_id,
                 'food_menu_id' => $result['menu_id'],
-                'food_category_id' => $tags,
+                'menu_tag' => $tag,
             ];
 
-            $FoodMenu->storeMenuTags($tagsParams);
+            $FoodMenu->storeMenuTags($tagParams);
         }
 
         return response()->json($result, $result['http_code'])->header(__('messages.header_convo'), Session::getId());
@@ -104,7 +108,24 @@ class StoreFoodmenuController extends Controller
      */
     public function show($id)
     {
-        //
+        //validate if store exists
+        $store = Store::where('store_id', $id)->first();
+
+        if (!$store) {
+            return [
+                'message' => __('messages.store_not_found'),
+                'status' => __('messages.status_error'),
+                'http_code' => $this->getStatusCode404(),
+            ];
+        }
+
+        $data = Foodmenu::getAllMenuOnStore($id);
+
+        return response()->json([
+            'data' => $data,
+            'status' => __('messages.status_success'),
+            'http_code' => $this->getStatusCode200(),
+        ], $this->getStatusCode200())->header(__('messages.header_convo'), Session::getId());
     }
 
     /**

@@ -21,6 +21,7 @@ return [
     'security_questions_success' => 'Security Questions Saved Successfully.',
     'create_store_success' => 'New Store Created',
     'create_menu_success' => 'New Menu Created',
+    'create_food_cateogry' => 'New Food Category Created',
 
     /**
      * error messages

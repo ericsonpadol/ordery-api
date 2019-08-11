@@ -25,12 +25,17 @@ class Foodmenu extends Model
         'food_menu_name',
         'food_menu_description',
         'food_menu_price',
+        'food_category_id',
         'store_id',
         'image_uri',
     ];
 
+    protected $date = [
+        'deleted_at'
+    ];
     protected $hidden = [
-        'created_at'
+        'created_at',
+        'deleted_at'
     ];
 
     /**
@@ -62,6 +67,7 @@ class Foodmenu extends Model
             'food_menu_name' => $params['food_menu_name'],
             'food_menu_description' => $params['food_menu_description'],
             'food_menu_price' => $params['food_menu_price'],
+            'food_category_id' => $params['food_category_id'],
             'store_id' => $params['store_id'],
             'image_uri' => $params['image_uri'],
         ];
@@ -99,11 +105,30 @@ class Foodmenu extends Model
         $tags = [
             'store_id' => $params['store_id'],
             'food_menu_id' => $params['food_menu_id'],
-            'food_category_id' => $params['food_category_id'],
+            'menu_tags' => strtoupper($params['menu_tag']),
         ];
 
         try {
             DB::table($this->menuTagTable)->insert($tags);
+        } catch(Exception $e) {
+            return [
+                'message' => $e->getMessage(),
+                'error_code' => $e->getCode(),
+                'stack_trace' => $e->getTraceAsString(),
+                'line' => $e->getLine(),
+                'http_code' => StatusHttp::getStatusCode500()
+            ];
+        }
+    }
+
+    public static function getAllMenuOnStore($id)
+    {
+        try {
+
+            $result = Foodmenu::where('store_id', $id)->get();
+
+            return $result ? $result : [];
+
         } catch(Exception $e) {
             return [
                 'message' => $e->getMessage(),
