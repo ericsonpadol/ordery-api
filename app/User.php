@@ -151,9 +151,16 @@ class User extends Authenticatable
             ];
         }
 
+        //get user account type
+        $accountType = DB::table($this->table)
+            ->where($this->table . '.user_account', '=', $id)
+            ->select($this->table . '.account_type')
+            ->first();
+        $lookupTable = $this->accountTableDetails($accountType->account_type);
+
         //get user account information
         $userAccount = DB::table(USER::VENDOR_MASTER_TABLE)
-            ->join($this->table, $this->table . '.id', '=', USER::VENDOR_MASTER_TABLE . '.user_id')
+            ->join($this->table, $this->table . '.user_account', '=', USER::VENDOR_MASTER_TABLE . '.user_id')
             ->where(USER::VENDOR_MASTER_TABLE . '.user_id', '=', $id)
             ->select(
                 $this->table . '.email',
@@ -172,6 +179,12 @@ class User extends Authenticatable
             ->where($userAccount->account_type . '_master_id', '=', $userAccount->id)
             ->first();
 
+        //get additional information
+        $additionalDetails = DB::table($lookupTable)
+                ->where($lookupTable . '.user_account', '=', $id)
+                ->first();
+
+        $userDetails = (object) array_merge((array) $userDetails, (array) $additionalDetails);
         $userInfo = (object) array_merge((array) $userAccount, (array) $userDetails);
 
         Log::debug(__('messages.convo_id_label') .  Session::getId() . serialize(DB::getQueryLog()));
@@ -366,7 +379,8 @@ class User extends Authenticatable
             ];
 
             //create new registered user
-            $userAccount = $this->create($paramsUserAccount)->id;
+            $this->create($paramsUserAccount);
+            $userAccount = $paramsUserAccount['user_account'];
 
             //LOG execution
             Log::info(__('messages.convo_id_label') . Session::getId() . ' SQL QUERY: ' . serialize(DB::getQueryLog()));
