@@ -16,17 +16,15 @@ class UserVendorTableMaster extends Migration
         //
         Schema::create('users_vendors', function(Blueprint $table) {
             $table->engine = 'InnoDB';
-
             //columns
             $table->increments('id');
-            $table->integer('user_id')->unsigned(); //foreign key
+            $table->string('user_id', 191); //foreign key
             $table->text('tbl_vendors')->nullable();
             $table->text('tbl_details')->nullable();
             $table->text('tbl_menu')->nullable();
-
             //foreign key
             $table->foreign('user_id')
-                ->references('id')
+                ->references('user_account')
                 ->on('users');
         });
     }
