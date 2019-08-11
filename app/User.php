@@ -382,6 +382,31 @@ class User extends Authenticatable
             $this->create($paramsUserAccount);
             $userAccount = $paramsUserAccount['user_account'];
 
+            /**
+             * Happy Path Scenario : Create Store Upon Registration
+             */
+            //create store
+            $storeParams = [
+                'user_account' => $userAccount,
+                'store_id' => $this->uuidStoreKeyGeneration(),
+                'store_name' => $params['store']['store_name'],
+                'street' => $params['store']['street'],
+                'brgy' => isset($params['store']['brgy']) ? $params['store']['brgy'] : null,
+                'province' => isset($params['store']['province']) ? $params['store']['province'] : null,
+                'region' => isset($params['store']['region']) ? $params['store']['region'] : null,
+                'city' => $params['addr_city'],
+                'store_lat' => isset($params['store']['store_lat']) ? $params['store']['store_lat'] : null,
+                'store_long' => isset($params['store']['store_long']) ? $params['store']['store_long'] : null,
+                'phone_number' => isset($params['store']['phone_number']) ? $params['store']['phone_number'] : null,
+                'is_always_open' => $params['store']['is_always_open'],
+                'store_opens_at' => isset($params['store']['store_opens_at']) ? $params['store']['store_opens_at'] : null,
+                'store_closes_at' => isset($params['store']['store_closes_at']) ? $params['store']['store_closes_at'] : null,
+                'zipcode' => isset($params['store']['zipcode']) ? $params['store']['zipcode'] : 0,
+                'image_uri' => isset($params['store']['image_uri']) ? $params['store']['image_uri'] : null,
+            ];
+
+            Store::create($storeParams);
+
             //LOG execution
             Log::info(__('messages.convo_id_label') . Session::getId() . ' SQL QUERY: ' . serialize(DB::getQueryLog()));
 
@@ -427,7 +452,7 @@ class User extends Authenticatable
                     'addr_province' => isset($params['addr_province']) ? $params['addr_province'] : null,
                     'addr_region' => isset($params['addr_region']) ? $params['addr_region'] : null,
                     'addr_zip' => isset($params['addr_zip']) ? $params['addr_zip'] : null,
-                    'store_name' => $params['store_name'],
+                    'store_name' => $params['store']['store_name'],
                     'fb_page' => isset($params['fb_page']) ? $params['fb_page'] : null,
                     'website' => isset($params['website']) ? $params['website'] : null,
                 ]

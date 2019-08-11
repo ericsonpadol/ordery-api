@@ -15,10 +15,12 @@ class CreateFoodcategoriesTable extends Migration
     {
         Schema::create('foodcategories', function (Blueprint $table) {
             $table->increments('id');
+            $table->string('store_id', 191);
             $table->string('food_category_id', 191)
                 ->unique(); //uuid version 4
             $table->string('food_category_name', 191);
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

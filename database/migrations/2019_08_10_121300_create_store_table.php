@@ -19,10 +19,14 @@ class CreateStoreTable extends Migration
             $table->string('store_id', 191)
                 ->unique();
             $table->string('store_name', 191);
-            $table->text('address');
+            $table->text('street');
+            $table->string('brgy', 191)
+                ->nullable();
+            $table->string('province', 191)
+                ->nullable();
+            $table->string('region', 191)
+                ->nullable();
             $table->string('city', 191);
-            $table->string('mobile_number', 15)
-                ->unique();
             $table->string('phone_number', 191)
                 ->unique()
                 ->nullable();
@@ -34,8 +38,10 @@ class CreateStoreTable extends Migration
             $table->time('store_closes_at')
                 ->default(null)
                 ->nullable();
-            $table->double('store_lat');
-            $table->double('store_long');
+            $table->double('store_lat')
+                ->nullable();
+            $table->double('store_long')
+                ->nullable();
             $table->integer('zipcode')
                 ->unsigned()
                 ->default(0);
@@ -47,6 +53,7 @@ class CreateStoreTable extends Migration
             $table->foreign('user_account')
                 ->references('user_account')
                 ->on('users');
+            $table->index('city', 'addr_city');
         });
     }
 
