@@ -25,7 +25,7 @@ Route::group(['middlware' => ['api', 'secure.content']], function() {
     Route::get('/account-verification', ['as' => 'verification', 'uses' => 'Api\ApiController@verification']);
 });
 
-Route::group(['middleware' => ['api', 'secure.content']], function() {
+Route::group(['middleware' => ['api', 'auth:api', 'secure.content']], function() {
     Route::resource('/users', 'User\UserController', ['except' => ['create', 'edit']]);
     Route::post('/users/restore-account', 'User\UserController@restoreAccount');
     Route::get('/auth/user-details', ['as' => 'user-details', 'uses' => 'Api\ApiController@userDetails']);
