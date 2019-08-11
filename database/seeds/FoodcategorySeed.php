@@ -59,7 +59,7 @@ class FoodcategorySeed extends Seeder
         foreach ($foodCategories as $foodCategory) {
             Foodcategory::create([
                 'food_category_id' => AccountHelper::uuidGeneration(),
-                'food_category_name' => $foodCategory
+                'food_category_name' => strtoupper($foodCategory)
             ]);
         }
     }

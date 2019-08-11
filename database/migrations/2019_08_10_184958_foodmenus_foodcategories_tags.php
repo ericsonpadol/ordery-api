@@ -18,10 +18,10 @@ class FoodmenusFoodcategoriesTags extends Migration
             $table->increments('id');
             $table->string('store_id', 191);
             $table->string('food_menu_id', 191);
-            $table->string('food_category_id', 191);
+            $table->string('menu_tags', 191);
             $table->index('store_id');
             $table->index('food_menu_id');
-            $table->index('food_category_id');
+            $table->index('menu_tags');
         });
     }
 
