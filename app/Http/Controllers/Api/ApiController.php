@@ -64,8 +64,23 @@ class ApiController extends Controller
 
     public function userDetails()
     {
+        //auth user details
+        $user = auth()->user();
+
+        if (!$user) {
+            return response()->json([
+                'message' => __('auth.invalid_token'),
+                'http_code' => $this->getStatusCode401(),
+                'status' => __('messages.status_error')
+            ],$this->getStatusCode401());
+        }
+
+        //get full user details
+        $User = new User();
+        $result = $User->getUserDetails($user['user_account']);
+
         return response()->json([
-            'data' => auth()->user(),
+            'data' => $result,
             'http_code' => $this->getStatusCode200(),
             'status' => __('messages.status_success'),
         ], $this->getStatusCode200())->header(__('messages.header_convo'), Session::getId());
