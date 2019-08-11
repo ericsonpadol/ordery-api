@@ -5,11 +5,14 @@ namespace App\Http\Controllers;
 use App\Foodcategory;
 use Illuminate\Http\Request;
 use App\Traits\StatusHttp;
+use App\Traits\AccountHelper;
 use Session;
+use Log;
+use Validator;
 
 class FoodcategoryController extends Controller
 {
-    use StatusHttp;
+    use StatusHttp, AccountHelper;
 
     /**
      * Display a listing of the resource.
@@ -45,7 +48,43 @@ class FoodcategoryController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $rules = [
+            'food_category_name' => 'required|string|max:191'
+        ];
+
+        //validate food category name
+        $validator = Validator::make($request->all(), $rules);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'message' => $validator->errors(),
+                'http_code' => $this->getStatusCode400(),
+                'status' => __('messages.status_error')
+            ], $this->getStatusCode400())->header(__('messages.header_convo'), Session::getId());
+        }
+
+        try {
+            $params = [
+                'food_category_id' => $this->uuidStoreKeyGeneration(),
+                'food_category_name' => strtoupper($request->food_category_name),
+            ];
+
+            Foodcategory::create($params);
+
+            return response()->json([
+                'message' => __('messages.create_food_cateogry'),
+                'http_code' => $this->getStatusCode200(),
+                'status' => __('messages.status_success'),
+            ], $this->getStatusCode200());
+        } catch(Exception $e) {
+            return response()->json([
+                'message' => $e->getMessage(),
+                'error_code' => $e->getCode(),
+                'stack_trace' => $e->getTraceAsString(),
+                'line' => $e->getLine(),
+                'http_code' => $this->getStatusCode500()
+            ], 500);
+        }
     }
 
     /**
@@ -56,7 +95,7 @@ class FoodcategoryController extends Controller
      */
     public function show(Foodcategory $foodcategory)
     {
-        //
+
     }
 
     /**

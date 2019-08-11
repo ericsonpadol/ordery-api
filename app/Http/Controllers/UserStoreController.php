@@ -94,7 +94,6 @@ class UserStoreController extends Controller
             'store_opens_at' => $request->store_opens_at,
             'store_closes_at' => $request->store_closes_at,
             'zipcode' => $request->zipcode,
-            'food_category_id' => $request->food_category_id,
         ];
 
         $store = new Store();

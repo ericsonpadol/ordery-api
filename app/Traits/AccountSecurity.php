@@ -21,8 +21,15 @@ trait AccountSecurity
     {
        $user = DB::table($table)
         ->where('email', $params['email'])
-        ->where('password', bcrypt($params['password']))
         ->first();
+
+        if (!$user) {
+            return false;
+        }
+
+        if (!password_verify($params['password'], $user->password)) {
+            return false;
+        }
 
         return $user ? true : false;
     }
