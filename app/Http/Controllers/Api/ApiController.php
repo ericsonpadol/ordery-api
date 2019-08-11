@@ -98,7 +98,12 @@ class ApiController extends Controller
             'account_type' => 'required',
             'full_name' => 'required',
             'addr_city' => 'required',
-            'store_name' => 'required',
+            'store.store_name' => 'required|string',
+            'store.street' => 'required|string',
+            'store.store_lat' => 'required',
+            'store.store_long' => 'required',
+            'store.phone_number' => 'required',
+            'store.is_always_open' => 'required',
         ];
 
         $validator = Validator::make($request->all(), $rules);

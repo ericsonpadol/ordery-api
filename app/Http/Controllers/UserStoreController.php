@@ -62,11 +62,12 @@ class UserStoreController extends Controller
         $rules = [
             'user_account' => 'required|string',
             'store_name' => 'required|string',
-            'address' => 'required|string',
+            'street' => 'required|string',
             'city' => 'required|string',
             'mobile_number' => 'required|numeric',
             'store_lat' => 'required',
             'store_long' => 'required',
+            'is_always_open' => 'required',
             'store_opens_at' => 'required_if:is_always_open,false',
             'store_closes_at' => 'required_if:is_always_open,false'
         ];
@@ -84,7 +85,10 @@ class UserStoreController extends Controller
         $params = [
             'user_account' => $request->user_account,
             'store_name' => $request->store_name,
-            'address' => $request->address,
+            'street' => $request->street,
+            'brgy' => $request->brgy,
+            'province' => $request->province,
+            'region' => $request->region,
             'city' => $request->city,
             'store_lat' => $request->store_lat,
             'store_long' => $request->store_long,
