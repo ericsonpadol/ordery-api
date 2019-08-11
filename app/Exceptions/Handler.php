@@ -53,4 +53,17 @@ class Handler extends ExceptionHandler
     {
         return parent::render($request, $exception);
     }
+
+    protected function unauthenticated($request, \Illuminate\Auth\AuthenticationException $exception)
+    {
+        if ($request->expectsJson()) {
+            return response()->json([
+                'message' => 'Unauthenticated',
+                'http_code' => 401,
+                'status_code' => __('messages.status_error')
+            ], 401);
+        }
+
+        return redirect()->action('Api\ApiController@unauthenticated');
+    }
 }

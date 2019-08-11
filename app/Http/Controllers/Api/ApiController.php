@@ -26,18 +26,27 @@ class ApiController extends Controller
             'password' => $request->password
         ];
 
-        //check if account is active
-        if ($this->isAccountActive($credentials) === false) {
+        if ($this->isCredentialsValid($credentials) === false) {
             return response()->json([
-                'message' => __('messages.unverified_account'),
+                'message' => __('auth.failed'),
                 'http_code' => $this->getStatusCode401(),
-                'status' => __('messages.status_error')
+                'status' => __('messages.status_error'),
             ], $this->getStatusCode401())
                 ->header(__('messages.header_convo'), Session::getId());
         }
 
         if (auth()->attempt($credentials)) {
             $accessToken = auth()->user()->createToken('secret_ordery')->accessToken;
+
+            //check if account is active
+            if ($this->isAccountActive($credentials) === false) {
+                return response()->json([
+                    'message' => __('messages.unverified_account'),
+                    'http_code' => $this->getStatusCode401(),
+                    'status' => __('messages.status_error')
+                ], $this->getStatusCode401())
+                    ->header(__('messages.header_convo'), Session::getId());
+            }
 
             return response()->json([
                 'access_token' => $accessToken,
@@ -119,7 +128,6 @@ class ApiController extends Controller
         try {
             $user->where('active', $request->active)
                 ->update(['is_verified' => USER::VERIFIED_USER]);
-
         } catch (Exception $e) {
             return [
                 'message' => $e->getMessage(),
@@ -129,5 +137,14 @@ class ApiController extends Controller
                 'http_code' => StatusHttp::getStatusCode500()
             ];
         }
+    }
+
+    public function unauthenticated()
+    {
+        return response()->json([
+            'message' => __('auth.unauthenticated'),
+            'http_code' => 401,
+            'status' => __('messages.status_error')
+        ], 401)->header(__('messages.header_convo'), Session::getId());
     }
 }

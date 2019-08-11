@@ -16,4 +16,14 @@ trait AccountSecurity
 
         return $user ? true : false;
     }
+
+    public function isCredentialsValid(array $params = [], $table = 'users')
+    {
+       $user = DB::table($table)
+        ->where('email', $params['email'])
+        ->where('password', bcrypt($params['password']))
+        ->first();
+
+        return $user ? true : false;
+    }
 }
