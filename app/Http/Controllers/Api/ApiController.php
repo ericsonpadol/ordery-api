@@ -79,11 +79,7 @@ class ApiController extends Controller
         $User = new User();
         $result = $User->getUserDetails($user['user_account']);
 
-        return response()->json([
-            'data' => $result,
-            'http_code' => $this->getStatusCode200(),
-            'status' => __('messages.status_success'),
-        ], $this->getStatusCode200())->header(__('messages.header_convo'), Session::getId());
+        return response()->json($result, $this->getStatusCode200())->header(__('messages.header_convo'), Session::getId());
     }
 
     public function registration(Request $request)
