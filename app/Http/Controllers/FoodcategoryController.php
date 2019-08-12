@@ -49,6 +49,7 @@ class FoodcategoryController extends Controller
     public function store(Request $request)
     {
         $rules = [
+            'store_id' => 'required|exists:stores',
             'food_category_name' => 'required|string|max:191'
         ];
 
@@ -65,6 +66,7 @@ class FoodcategoryController extends Controller
 
         try {
             $params = [
+                'store_id' => $request->store_id,
                 'food_category_id' => $this->uuidStoreKeyGeneration(),
                 'food_category_name' => strtoupper($request->food_category_name),
             ];

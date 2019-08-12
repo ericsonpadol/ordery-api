@@ -21,6 +21,7 @@ class CreateFoodcategoriesTable extends Migration
             $table->string('food_category_name', 191);
             $table->timestamps();
             $table->softDeletes();
+            $table->index('food_category_id');
         });
     }
 
