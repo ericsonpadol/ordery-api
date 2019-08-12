@@ -33,6 +33,7 @@ Route::group(['middleware' => ['api', 'auth:api', 'secure.content']], function()
     Route::resource('/stores', 'UserStoreController', ['except' => ['create', 'edit']]);
     Route::resource('/food/categories', 'FoodcategoryController', ['except' => ['create', 'edit']]);
     Route::resource('/food/menus', 'Menu\StoreFoodmenuController', ['except' => ['create', 'edit']]);
+    Route::get('/food-categories/{id}', ['as' => 'foodcategory-details', 'uses' => 'FoodcategoryController@getAllFoodCategoryStoreSpecific']);
 });
 
 Route::post('oauth/token ', '\Laravel\Passport\Http\Controllers\AccessTokenController@issueToken');
