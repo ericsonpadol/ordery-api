@@ -21,6 +21,7 @@ class Foodcategory extends Model
         'food_category_id',
         'food_category_name',
         'store_id',
+        'food_category_desc'
     ];
 
     protected $hidden = [
@@ -49,6 +50,11 @@ class Foodcategory extends Model
         return $this->hasMany('App\Foodmenu');
     }
 
+    public function getFoodCategoryTable()
+    {
+        return $this->table;
+    }
+
     public function getAllFoodCategoryWithStoreInfo()
     {
         //return all food category with store information
@@ -61,6 +67,7 @@ class Foodcategory extends Model
                 $this->table . '.food_category_id',
                 $this->table . '.food_category_name',
                 $this->table . '.updated_at',
+                $this->table . '.food_category_desc',
                 $Store->getStoreTable() . '.store_name'
             )
             ->get();
@@ -85,6 +92,7 @@ class Foodcategory extends Model
                 $this->table . '.food_category_id',
                 $this->table . '.food_category_name',
                 $this->table . '.updated_at',
+                $this->table . '.food_category_desc',
                 $Store->getStoreTable() . '.store_name'
             )
             ->where($this->table . '.store_id', '=', $id)

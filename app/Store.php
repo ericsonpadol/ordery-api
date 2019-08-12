@@ -128,7 +128,7 @@ class Store extends Model
                 $this->userTable . '.email'
             )
             ->where('store_id', $id)
-            ->get();
+            ->first();
 
         return $storeInfo;
     }

@@ -19,6 +19,7 @@ class CreateFoodcategoriesTable extends Migration
             $table->string('food_category_id', 191)
                 ->unique(); //uuid version 4
             $table->string('food_category_name', 191);
+            $table->text('food_category_desc');
             $table->timestamps();
             $table->softDeletes();
             $table->index('food_category_id');

@@ -46,9 +46,9 @@ class StoreFoodmenuController extends Controller
         $rules = [
             'food_menu_name' => 'required|string|max:191',
             'food_menu_price' => 'required|numeric',
-            'food_category_id' => 'required',
+            'food_category_id' => 'required|exists:foodcategories',
             'food_menu_description' => 'required',
-            'store_id' => 'required',
+            'store_id' => 'required|exists:stores',
             'menu_tags' => 'required'
         ];
 
@@ -119,7 +119,8 @@ class StoreFoodmenuController extends Controller
             ];
         }
 
-        $data = Foodmenu::getAllMenuOnStore($id);
+        $FoodMenu = new Foodmenu();
+        $data = $FoodMenu->getAllMenuOnStore($id);
 
         return response()->json([
             'data' => $data,
