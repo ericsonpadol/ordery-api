@@ -6,9 +6,12 @@ use Illuminate\Database\Eloquent\Model;
 use App\Foodmenu;
 use DB;
 use Log;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Foodcategory extends Model
 {
+    use SoftDeletes;
+
     protected $key = 'id';
     protected $table = 'foodcategories';
     protected $fillable = [
@@ -19,6 +22,10 @@ class Foodcategory extends Model
     protected $hidden = [
         'created_at',
         'updated_at',
+    ];
+
+    protected $data = [
+        'deleted_at'
     ];
 
     /**
@@ -37,4 +44,5 @@ class Foodcategory extends Model
     {
         return $this->hasMany('App\Foodmenu');
     }
+
 }
