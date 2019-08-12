@@ -68,6 +68,7 @@ class FoodcategoryController extends Controller
                 'store_id' => $request->store_id,
                 'food_category_id' => $this->uuidStoreKeyGeneration(),
                 'food_category_name' => strtoupper($request->food_category_name),
+                'food_category_desc' => $request->food_category_desc,
             ];
 
             Foodcategory::create($params);
@@ -76,7 +77,7 @@ class FoodcategoryController extends Controller
                 'message' => __('messages.create_food_cateogry'),
                 'http_code' => $this->getStatusCode200(),
                 'status' => __('messages.status_success'),
-            ], $this->getStatusCode200());
+            ], $this->getStatusCode200())->header(__('messages.header_convo'), Session::getId());
         } catch(Exception $e) {
             return response()->json([
                 'message' => $e->getMessage(),
@@ -84,7 +85,7 @@ class FoodcategoryController extends Controller
                 'stack_trace' => $e->getTraceAsString(),
                 'line' => $e->getLine(),
                 'http_code' => $this->getStatusCode500()
-            ], 500);
+            ], 500)->header(__('messages.header_convo'), Session::getId());
         }
     }
 
