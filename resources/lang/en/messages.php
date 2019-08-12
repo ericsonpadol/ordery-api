@@ -35,6 +35,7 @@ return [
     'empty_security_questions' => 'no security questions found',
     'unverified_account' => 'account is not verified',
     'store_not_found' => 'Store doesn\'t exists',
+    'food_category_not_found' => 'there are no food categories associated on this store',
 
     /**
      * mail spiel

@@ -121,13 +121,82 @@ class Foodmenu extends Model
         }
     }
 
-    public static function getAllMenuOnStore($id)
+    public function getAllStoreFoodMenu($foodCategoryId, $storeId)
     {
+        $result = Foodmenu::where([
+            ['food_category_id', '=', $foodCategoryId],
+            ['store_id', '=', $storeId]
+        ])->get();
+
+        return $result;
+    }
+
+    public function getFoodTags($foodMenuId, $storeId)
+    {
+        $foodTags = array();
+        $tags = DB::table($this->menuTagTable)
+            ->where('food_menu_id', $foodMenuId)
+            ->where('store_id', $storeId)
+            ->select($this->menuTagTable . '.*')
+            ->get();
+
+        Log::debug(DB::getQueryLog());
+        foreach($tags as $tag) {
+            array_push($foodTags, $tag->menu_tags);
+        }
+
+        return implode("," , $foodTags);
+    }
+
+    public function getAllMenuOnStore($id)
+    {
+        $Store = new Store();
+        $FoodCategory = new Foodcategory();
         try {
+            $data = [];
+            //Get Store Information
+            $storeInfo = $Store->getStoreInformation($id);
+            $data = [
+                'store_id' =>  $storeInfo->store_id,
+                'store_name' => $storeInfo->store_name,
+                'email' => $storeInfo->email,
+                'image_uri' => $storeInfo->image_uri
+            ];
 
-            $result = Foodmenu::where('store_id', $id)->get();
+            //build store menu get all food category under this story
+            $foodCategoryMenu = $FoodCategory->getAllFoodCategoryWithStoreInfo($storeInfo->store_id);
 
-            return $result ? $result : [];
+            if (!isset($foodCategoryMenu['data'])) {
+                return [
+                    'message' => __('messages.food_category_not_found'),
+                    'status' => __('messages.status_error'),
+                    'http_code' => $this->getStatusCode404()
+                ];
+            }
+            $counter = 0;
+
+            foreach($foodCategoryMenu['data'] as $foodCategory) {
+                $data['menu'][$counter] = [
+                    'food_category_id' => $foodCategory->food_category_id,
+                    'food_category_name' => $foodCategory->food_category_name,
+                    'food_category_desc' => $foodCategory->food_category_desc,
+                ];
+                //get all store food menu
+                $foods = $this->getAllStoreFoodMenu($foodCategory->food_category_id, $storeInfo->store_id);
+                foreach($foods as $food) {
+                    $data['menu'][$counter]['foods'] = [
+                        'food_menu_id' => $food->food_menu_id,
+                        'food_menu_name' => $food->food_menu_name,
+                        'food_menu_description' => $food->food_menu_description,
+                        'food_menu_price' => $food->food_menu_price,
+                    ];
+                    //get food tags
+                    $foodTags = $this->getFoodTags($food->id, $storeInfo->store_id);
+                    $data['menu'][$counter]['foods']['tags'] = $foodTags;
+                }
+            }
+
+            return $data ? $data : [];
 
         } catch(Exception $e) {
             return [
