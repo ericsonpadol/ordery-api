@@ -56,6 +56,11 @@ class Store extends Model
         return $this->hasOne('App\User');
     }
 
+    public function getStoreTable()
+    {
+        return $this->table;
+    }
+
     public function createNewStore(array $params = [])
     {
         //check if user exists

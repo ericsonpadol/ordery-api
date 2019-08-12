@@ -9,6 +9,7 @@ use App\Traits\AccountHelper;
 use Session;
 use Log;
 use Validator;
+use App\Store;
 
 class FoodcategoryController extends Controller
 {
@@ -21,13 +22,11 @@ class FoodcategoryController extends Controller
      */
     public function index()
     {
-        $foodCategories = Foodcategory::all();
+        $FoodCategory = new Foodcategory();
 
-        return response()->json([
-            'data' => $foodCategories ?  $foodCategories : [],
-            'http_code' => $this->getStatusCode200(),
-            'status' => __('messages.status_success'),
-        ])->header(__('messages.header_convo'), Session::getId());
+        $result = $FoodCategory->getAllFoodCategoryWithStoreInfo();
+
+        return response()->json($result, $this->getStatusCode200())->header(__('messages.header_convo'), Session::getId());
     }
 
     /**
@@ -132,5 +131,24 @@ class FoodcategoryController extends Controller
     public function destroy(Foodcategory $foodcategory)
     {
         //
+    }
+
+    public function getAllFoodCategoryStoreSpecific($id)
+    {
+        $store = Store::where('store_id', $id)->first();
+
+        if (!$store) {
+            return [
+                'message' => __('messages.store_not_found'),
+                'status' => __('messages.status_error'),
+                'http_code' => $this->getStatusCode404(),
+            ];
+        }
+
+        $FoodCategory = new Foodcategory();
+
+        $result = $FoodCategory->getSpecificStoreFoodCategoryWithStoreInfo($id);
+
+        return response()->json($result, $this->getStatusCode200())->header(__('messages.header_convo'), Session::getId());
     }
 }
